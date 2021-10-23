@@ -1,0 +1,5 @@
+export const LOGIN_WITH_EMAIL_AND_PASSWORD = 'LOGIN_WITH_EMAIL_AND_PASSWORD'
+export const AUTH_ERROR = 'AUTH_ERROR'
+export const AUTH_SUCCESS = 'AUTH_SUCCESS'
+export const SET_UID = 'SET_UID'
+export const SIGN_OUT = 'SIGN_OUT'
