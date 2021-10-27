@@ -10,11 +10,10 @@ const app = express();
 
 app.use(express.static('./build'));
 
-app.get('/', (req, res) => {
-  console.log(req.originalUrl)
+app.get('/*', (req, res) => {
   const reactApp = ReactDOMServer.renderToString(<App />);
 
-  const indexFile = path.resolve('./build/index.html');
+  const indexFile = path.resolve('./build/server.html');
   fs.readFile(indexFile, 'utf8', (err, data) => {
     if (err) {
       console.error('Something went wrong:', err);
@@ -22,7 +21,7 @@ app.get('/', (req, res) => {
     }
 
     return res.send(
-      data.replace('<div id="root"></div>', `<div id="root">${reactApp}</div>`),
+      data.replace('<div id="root"></div>', `<div id="root">${reactApp}</div>`)
     );
   });
 });

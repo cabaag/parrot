@@ -2,8 +2,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Button, Container, IconButton, Snackbar } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import {
-  StaticRouter as Router, Route, Switch
+import { Route, Switch ,
+  BrowserRouter, StaticRouter
 } from 'react-router-dom';
 import { logout, refreshToken } from './actions/AuthActions';
 import './App.css';
@@ -61,32 +61,39 @@ function App() {
 
 
   return (
-    <Router>
-      <Container maxWidth="sm" style={{
-        minHeight: '100vh',
-      }} >
-        <Switch>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <PrivateRoute exact path="/">
-            <Home />
-          </PrivateRoute>
-        </Switch>
-        <Snackbar
-          action={action}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          autoHideDuration={1000 * 5}
-          message="Token caducado"
-          onClose={onCloseSnackbar}
-          open={tokenExpired} />
-      </Container>
-    </Router>
+    <Container maxWidth="sm" style={{
+      minHeight: '100vh',
+    }} >
+      <Switch>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+        <PrivateRoute exact path="/">
+          <Home />
+        </PrivateRoute>
+      </Switch>
+      <Snackbar
+        action={action}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        autoHideDuration={1000 * 5}
+        message="Token caducado"
+        onClose={onCloseSnackbar}
+        open={tokenExpired} />
+    </Container>
   );
 }
 
 const AppWrapper = () =>
-  <Provider store={store}>
-    <App />
-  </Provider>
+  typeof window !== 'undefined' ?
+    <BrowserRouter>
+      <Provider store={store} >
+        <App />
+      </Provider>
+    </BrowserRouter> :
+    <StaticRouter>
+      <Provider store={store} >
+        <App />
+      </Provider>
+    </StaticRouter>
+
 export default AppWrapper;

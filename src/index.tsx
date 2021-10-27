@@ -4,12 +4,21 @@ import AppWrapper from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.hydrate(
-  <React.StrictMode>
-    <AppWrapper />
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+if (typeof window !== 'undefined') {
+  ReactDOM.render(
+    <React.StrictMode>
+      <AppWrapper />
+    </React.StrictMode>,
+    document.getElementById('root'),
+  );
+} else {
+  ReactDOM.hydrate(
+    <React.StrictMode>
+      <AppWrapper />
+    </React.StrictMode>,
+    document.getElementById('root'),
+  );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
