@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
+import { UserState } from '../types/User';
 import authReducer, { AuthState } from './AuthReducer';
-import userReducer, { UserState } from './UserReducer';
+import userReducer from './UserReducer';
 
 export type RootState = {
   user: UserState;
@@ -8,6 +9,6 @@ export type RootState = {
 };
 
 export default combineReducers({
-  user: userReducer,
   auth: authReducer,
+  user: userReducer
 });

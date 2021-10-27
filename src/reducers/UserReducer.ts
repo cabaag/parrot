@@ -1,106 +1,49 @@
-import {
-  bookOutline, checkmarkDoneCircleOutline, keyOutline
-} from 'ionicons/icons'
-import Storage from '../classes/storage'
-import { AppPage } from '../types/AppPage'
 import { SIGN_OUT } from '../types/Auth'
-import Roles from '../types/Roles'
-import { Settings, Theme } from '../types/Settings'
-import {
-  ADD_CONTACT,
-  CHANGE_THEME,
-  REMOVE_CONTACT,
-  SET_CONTACTS,
-  SET_SETTINGS,
-  SET_USER,
-  User
-} from '../types/User'
-
-const ROOT = '/app'
-
-export type UserState = {
-  user: User | null,
-  contacts: Set<string>,
-  colony: string,
-  quickAccesses: AppPage[],
-  settings: Settings
-}
+import { UPDATE_PRODUCT } from '../types/Store'
+import { SET_USER, SET_USER_STORES, UserState, USER_ERROR } from '../types/User'
 
 const INITIAL_STATE: UserState = {
-  user: null,
-  contacts: new Set(),
-  colony: '7VAerIUi5MqfEaAqLUSo',
-  quickAccesses: [{
-    title: 'Control de Accesos',
-    url: `${ROOT}/access-control`,
-    icon: keyOutline,
-    roles: [Roles.RESIDENT, Roles.ADMIN, Roles.COMMITTEE],
-  }, {
-    title: 'Vecinos',
-    icon: bookOutline,
-    roles: [Roles.RESIDENT, Roles.ADMIN, Roles.COMMITTEE],
-    url: `${ROOT}/directory`
-  }, {
-    title: 'Votaciones',
-    icon: checkmarkDoneCircleOutline,
-    roles: [Roles.RESIDENT, Roles.ADMIN, Roles.COMMITTEE],
-    url: `${ROOT}/votes`
-  }],
-  settings: { theme: Theme.LIGHT }
+  stores: [],
 }
 
 const userReducer = (state = INITIAL_STATE, action: any) => {
-  let newContacts: Set<string> = new Set()
   switch (action.type) {
+    case SET_USER_STORES:
+      return {
+        ...state,
+        stores: action.payload,
+
+      }
     case SET_USER:
-      Storage.setItem('@user', JSON.stringify(action.payload))
       return {
         ...state,
-        user: action.payload as User,
+        ...action.payload,
       }
-    case SET_CONTACTS:
-      Storage.setItem('@contacts', JSON.stringify(action.payload))
+    case UPDATE_PRODUCT:
       return {
         ...state,
-        contacts: new Set([...action.payload]),
+        stores: state.stores.map(store => {
+          if (store.uuid === action.payload.store) {
+            const products = store.products.map(product =>
+              product.uuid === action.payload.uuid ? { ...action.payload } : product
+            )
+            return {
+              ...store,
+              products
+            }
+          }
+          return store
+        })
       }
-    case ADD_CONTACT:
-      newContacts = new Set([...state.contacts, action.payload])
-      Storage.setItem('@contacts', JSON.stringify([...newContacts]))
+    case SIGN_OUT: {
       return {
-        ...state,
-        contacts: newContacts,
+        stores: []
       }
-    case REMOVE_CONTACT:
-      state.contacts.delete(action.payload)
-      newContacts = new Set([...state.contacts])
-      Storage.setItem('@contacts', JSON.stringify([...newContacts]))
+    }
+    case USER_ERROR:
       return {
         ...state,
-        contacts: newContacts,
-      }
-    case SET_SETTINGS:
-      Storage.setItem('@settings', JSON.stringify(action.payload))
-      return {
-        ...state,
-        settings: { ...action.payload }
-      }
-    case CHANGE_THEME:
-      Storage.setItem('@settings', JSON.stringify({
-        ...state.settings,
-        theme: action.payload
-      }))
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          theme: action.payload
-        },
-      }
-    case SIGN_OUT:
-      return {
-        ...state,
-        user: null,
+        error: true
       }
     default:
       return state

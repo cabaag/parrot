@@ -1,71 +1,111 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Grid, TextField } from '@mui/material';
+import {
+  Button, Card, CardActions, CardContent, CardHeader, CircularProgress, Grid, TextField, Typography
+} from '@mui/material';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import * as yup from 'yup';
+import { login } from '../actions/AuthActions';
+import useAuth from '../hooks/useAuth';
 
 const validationSchema = yup.object({
   email: yup
     .string()
-    .email('Enter a valid email')
-    .required('Email is required'),
+    .email('Ingrese un email valido')
+    .required('Email es requerido'),
   password: yup
     .string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+    .min(6, 'Contraseña debe de ser minimo 6 caracteres')
+    .required('Contraseña es requerida'),
 });
 
 const Login: React.FC = () => {
 
   const history = useHistory();
+  const dispatch = useDispatch()
+  const { error: authError, success: authSuccess } = useAuth();
+
+  useEffect(() => {
+    if (authError) {
+      formik.setSubmitting(false);
+      formik.setErrors({
+        password: 'Email o contraseña incorrecta'
+      })
+    }
+    if (authSuccess) {
+      formik.setSubmitting(false);
+      history.replace('/');
+    }
+  }, [authError, authSuccess])
 
   const formik = useFormik({
     initialValues: {
-      email: 'foobar@example.com',
-      password: 'foobar',
+      email: 'android-challenge@parrotsoftware.io',
+      password: '8mngDhoPcB3ckV7X',
     },
-    validationSchema: validationSchema,
+    validationSchema,
     onSubmit: (values: any) => {
-      alert(JSON.stringify(values, null, 2));
+      dispatch(login(values.email, values.password))
       formik.setSubmitting(true)
-      history.replace('/');
     },
   });
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={8}>
+    <Grid alignItems="center" container justifyContent="center" spacing={2} style={{
+      minHeight: '100vh',
+      margin: 0,
+      width: '100%'
+    }}>
+      <Grid item style={{ padding: 0 }} xs={12}>
+        <Typography gutterBottom variant="h3">
+          Parrot Challenge
+        </Typography>
         <Card>
           <form onSubmit={formik.handleSubmit}>
-            <CardHeader>
-              Login
-            </CardHeader>
             <CardContent>
+              <Grid container direction="row" spacing={2} >
+                <Grid item xs={12}>
+                  <Typography variant="h5">
+                    Iniciar sesión
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    fullWidth
+                    helperText={formik.touched.email && formik.errors.email}
+                    id="email"
+                    label="Email"
+                    name="email"
+                    onChange={formik.handleChange}
+                    value={formik.values.email} />
 
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                label="Email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email} />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    fullWidth
+                    helperText={formik.touched.password && formik.errors.password}
+                    id="password"
+                    label="Password"
+                    name="password"
+                    onChange={formik.handleChange}
+                    type="password"
+                    value={formik.values.password} />
+                </Grid>
+              </Grid>
 
-              <TextField
-                fullWidth
-                id="password"
-                name="password"
-                label="Password"
-                type="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-              />
+
             </CardContent>
             <CardActions>
-              <Button size="small" disabled={formik.isSubmitting}>Submit</Button>
+              <Grid alignItems="flex-end" container direction="column" >
+                <Grid item >
+                  <Button disabled={formik.isSubmitting} size="small" type="submit" variant="contained">
+                    {formik.isSubmitting ? <CircularProgress style={{ height: 20, width: 20 }} /> : 'Entrar'}
+                  </Button>
+                </Grid>
+              </Grid>
             </CardActions>
           </form>
         </Card>
