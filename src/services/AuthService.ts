@@ -6,8 +6,12 @@ import {
   AUTH_ERROR, AUTH_SUCCESS, VALID_TOKEN, REFRESH_TOKEN
 } from '../types/Auth';
 
-const authState = JSON.parse(localStorage.getItem('auth') ?? '{}')
-
+let authState: any;
+if (typeof window !== 'undefined') {
+  authState = JSON.parse(localStorage.getItem('auth') ?? '{}')
+  const AUTH_TOKEN = authState.token;
+  axios.defaults.headers.common.Authorization = `Bearer ${AUTH_TOKEN}`;
+}
 export default class AuthService {
   public static token: string;
 
@@ -62,4 +66,9 @@ export default class AuthService {
           })
         })
 
+}
+
+if (typeof window !== 'undefined') {
+  const AUTH_TOKEN = authState.token;
+  AuthService.token = AUTH_TOKEN;
 }

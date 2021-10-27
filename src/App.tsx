@@ -1,9 +1,9 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Container, IconButton, Snackbar } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import {
-  BrowserRouter as Router, Route, Switch
+  StaticRouter as Router, Route, Switch
 } from 'react-router-dom';
 import { logout, refreshToken } from './actions/AuthActions';
 import './App.css';
@@ -85,4 +85,8 @@ function App() {
   );
 }
 
-export default App;
+const AppWrapper = () =>
+  <Provider store={store}>
+    <App />
+  </Provider>
+export default AppWrapper;

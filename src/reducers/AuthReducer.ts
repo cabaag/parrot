@@ -3,7 +3,10 @@ import {
   AUTH_ERROR, AUTH_SUCCESS, CLEAR_AUTH_STATE, REFRESH_TOKEN, SET_UID, SIGN_OUT, VALID_TOKEN
 } from '../types/Auth';
 
-const authState = JSON.parse(localStorage.getItem('auth') ?? '{}')
+let authState
+if (typeof window !== 'undefined') {
+  authState = JSON.parse(localStorage.getItem('auth') ?? '{}')
+}
 
 export type AuthState = {
   uuid: string | null;
@@ -20,8 +23,8 @@ const INITIAL_STATE: AuthState = {
   uuid: null,
   error: false,
   success: false,
-  token: authState.token,
-  refresh: authState.refresh,
+  token: authState?.token,
+  refresh: authState?.refresh,
   expired: authState?.expiresIn < Date.now() || false,
   expiresIn: 0,
   loading: true,
