@@ -17,7 +17,7 @@ import store from './store';
 const authService = new AuthService()
 
 if (AuthService.token) {
-  store.dispatch(authService.isValidToken(AuthService.token))
+  store.dispatch(authService.isValidToken)
 }
 
 function App() {

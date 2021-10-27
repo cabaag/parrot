@@ -45,7 +45,7 @@ const authReducer = (state = INITIAL_STATE, action: any) => {
       }
     case AUTH_SUCCESS: case REFRESH_TOKEN:
       // eslint-disable-next-line no-case-declarations
-      const expiresIn = Date.now() + 1000 * 25
+      const expiresIn = Date.now() + 1000 * 60 * 25
       localStorage.setItem('auth', JSON.stringify({
         ...action.payload,
         token: action.payload?.access,

@@ -19,12 +19,12 @@ export default class AuthService {
       password
     })
 
-  refreshToken = (refresh: string): any =>
+  refreshToken = (refresh: string): Promise<any> =>
     axios.post('/api/auth/token/refresh', {
       refresh
     })
 
-  isValidToken = (): any =>
+  isValidToken = (): Promise<any> =>
     axios.get('api/auth/token/test')
 }
 

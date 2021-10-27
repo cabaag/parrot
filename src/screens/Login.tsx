@@ -55,10 +55,12 @@ const Login: React.FC = () => {
     <Grid alignItems="center" container justifyContent="center" spacing={2} style={{
       minHeight: '100vh',
       margin: 0,
-      width: '100%'
+      width: '100%',
     }}>
       <Grid item style={{ padding: 0 }} xs={12}>
-        <Typography gutterBottom variant="h3">
+        <Typography gutterBottom style={{
+          color: '#F04E4A'
+        }} variant="h3">
           Parrot Challenge
         </Typography>
         <Card>
@@ -110,7 +112,7 @@ const Login: React.FC = () => {
           </form>
         </Card>
       </Grid>
-    </Grid>
+    </Grid >
 
   )
 }

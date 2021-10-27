@@ -33,7 +33,9 @@ const Home: React.FC = () => {
         {
           stores.map(store => (
             <Grid item key={store.uuid}>
-              <Typography gutterBottom variant="h4">{store.name}</Typography>
+              <Typography gutterBottom style={{
+                color: '#F04E4A'
+              }} variant="h4">{store.name}</Typography>
               {
                 store.categories.map(category =>
                   <Category
